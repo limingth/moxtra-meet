@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<h3><!--<a id="getToken" href="javascript:get_token();"></a>-->Moxtra - Host Meet</h3>
+
+<div id="meet-container"></div>
+
+<!-- Include Moxtra JavaScript Library -->
+<!--<script type="text/javascript" src="https://www.moxtra.com/api/js/moxtra-latest.js" id="moxtrajs" data-client-id="uGvPYrH651o"></script>-->
+<script type="text/javascript" src="/javascripts/moxtra-latest.js" id="moxtrajs" data-client-id="uGvPYrH651o"></script>
+<!-- Include External JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+
+<script type="text/javascript">
+    // Create Signature
+    var client_id = "uGvPYrH651o";
+    var client_secret = "pIWm8f-u91g";
+    var timestamp = new Date().getTime();
+    var unique_id = "123456"; //Unique ID of how user is identified in your system
+
+    var hash = CryptoJS.HmacSHA256(client_id + unique_id + timestamp, client_secret);
+    var hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+    var signature = hashInBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=+$/, '');
+
+    // Initialize user and get access token
+    var get_token = function () {
+        var init_options = {
+            uniqueid: unique_id,
+            firstname: "maodou.io",
+            lastname: "",
+            timestamp: timestamp,
+            signature: signature,
+            get_accesstoken: function (result) {
+                console.log("access_token: " + result.access_token + " expires in: " + result.expires_in);
+                start_meet(result.access_token);
+            },
+            error: function (result) {
+                console.log("error code: " + result.error_code + " message: " + result.error_message);
+            }
+        };
+        Moxtra.setup(init_options);
+    };
+
+    // Start Meet Function using access_token
+    var start_meet = function (access_token) {
+        var meet_options = {
+            iframe: true, //To open the meet in the same window within an iFrame.
+            // tab: true, //To open the meet in a new browser tab, N/A if iframe option is set to true.
+            tagid4iframe: "meet-container", //ID of the HTML tag within which the Meet window will show up. Refer https://developer.grouphour.com/moxo/docs-js-sdk/#meet
+            iframewidth: "720px",
+            iframeheight: "300px",
+            extension: {
+                "show_dialogs": {"meet_invite": true}
+            },
+            access_token: access_token,
+            start_meet: function (event) {
+                console.log("Meet Started - session_id: " + event.session_id + "session_key: " + event.session_key);
+                //Your application server can upload files to meet using the session_id and session_key
+            },
+            error: function (event) {
+                console.log("error code: " + event.error_code + " message: " + event.error_message);
+            },
+            end_meet: function (event) {
+                console.log("Meet Ended");
+            }
+        };
+        Moxtra.meet(meet_options);
+    }
+
+    $(function () {
+        $('#meet-container').html('');
+        get_token();
+    });
+
+</script>
+</body>
+</html>
