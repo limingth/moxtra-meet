@@ -3,15 +3,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Moxtra Meet' });
 });
 
 router.get('/meet', function(req, res) {
-  res.render('meet', { title: 'Express' });
+  res.render('meet', { title: 'Moxtra Meet' });
 });
 
 router.get('/join', function(req, res) {
-  res.render('join', { title: 'Express' });
+  res.render('join', { title: 'Moxtra Meet' });
 });
 
 

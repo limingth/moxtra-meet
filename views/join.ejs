@@ -6,8 +6,8 @@
 <body>
 <div>
     <h3>Moxtra - Join Meet</h3>
-    <label for="meeting_key">meeting key</label><input  id='meeting_key' type='text' value=''/>
-    <label for="user_name">user name</label><input  id='user_name' type='text' value='Jacob'/>
+    <label for="meeting_key">meeting id: </label><input  id='meeting_key' type='text' value=''/>
+    <label for="user_name">your name: </label><input id='user_name' type='text' value='Jacob'/>
 
     <a id="join-meet" href="#">Join</a>
 
@@ -27,7 +27,7 @@
         var options = {
             //session_key: key.value,
             session_key: $('#meeting_key').val().split(' ').join(''),
-            user_name: 'haha',
+            user_name: $('#user_name').val(),
             iframe: true,
             tagid4iframe: "meet-container", //ID of the HTML tag within which the Meet window will show up. Refer https://developer.grouphour.com/moxo/docs-js-sdk/#meet
             iframewidth: "720px",
